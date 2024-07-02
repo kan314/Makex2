@@ -6,7 +6,7 @@ import math
 import time
 
 global speedlimit , check_spin , check_limit , spin
-speedlimit = 0.4
+speedlimit = 0.41
 check_limit = False
 check_spin = False
 spin = False
