@@ -130,8 +130,8 @@ def control():
     
 
     if spin == True and gamepad.is_key_pressed("≡") == False:
-        power_expand_board.set_power("DC2",-80)
-        power_expand_board.set_power("DC3",-40)
+        power_expand_board.set_power("DC2",-100)
+        power_expand_board.set_power("DC3",-60)
         power_expand_board.set_power("DC4",-100)
     elif spin == True and gamepad.is_key_pressed("≡") == True:
         power_expand_board.set_power("DC2",80)
@@ -151,20 +151,21 @@ def control():
             smartservo_1.move(-7,100)
     else:
         if gamepad.is_key_pressed("N4"):
-            smartservo_1.move_to(50,80)
+            smartservo_1.move_to(160,80)
         if gamepad.is_key_pressed("N3"):
-            smartservo_1.move_to(-10,80)
+            smartservo_1.move_to(115,80)
 
     if gamepad.is_key_pressed("N2") and check_reverse == False and gamepad.is_key_pressed("≡") == True:
         is_reverse = not is_reverse
         check_reverse = True
+
     elif gamepad.is_key_pressed("N2") and gamepad.is_key_pressed("≡") == False and check_reverse == False:
 
 
-        power_expand_board.set_power("DC6",-100)
-        time.sleep(1)
         power_expand_board.set_power("DC6",100)
-        time.sleep(1)
+        time.sleep(0.4)
+        power_expand_board.set_power("DC6",-100)
+        time.sleep(0.55)
         power_expand_board.set_power("DC6",0)
 
 
@@ -202,9 +203,9 @@ def autonomous():
     if  distance_sensor_1.get_distance() >= 10:
         time.sleep(0.01)
         #เบี่ยงไปเอา K
-        endo(200, 300 , -300 , -300 , 300 , 0)
+        endo(200, 220 ,-300 , -220 , 300 , 0)
         endo(200, 2100 , 2100 , 2100 , 2100 , 0)
-        endo(150, 830 , -830 , 830 , -830 , 0)
+        endo(150, 875 , -875 , 875 , -875 , 0)
 
 
         encoder_motor_M1.set_power(20)
@@ -213,16 +214,16 @@ def autonomous():
         encoder_motor_M4.set_power(-20)
 
 
-        time.sleep(1.08)
+        time.sleep(1.2)
 
         encoder_motor_M1.set_power(25)
-        encoder_motor_M2.set_power(-25) 
+        encoder_motor_M2.set_power(-25)
         encoder_motor_M3.set_power(25) 
         encoder_motor_M4.set_power(-25)
         power_expand_board.set_power("DC5" , 100)
         power_expand_board.set_power("DC1",100)
 
-        time.sleep(0.96)
+        time.sleep(1.1)
 
         encoder_motor_M1.set_power(0)
         encoder_motor_M2.set_power(0)
@@ -232,61 +233,29 @@ def autonomous():
         power_expand_board.set_power("DC5",0)
         power_expand_board.stop("DC5")
 
-        endo(70, 680 , 680 , 680 , 680 , 0)
+        endo(70, 700 , 700 , 700 , 700 , 0)
 
 
 
 
-        endo(90, -830 , 830 , -830 , 830 , 0)
+        endo(90, -840 , 840 , -840 , 840 , 0)
 
-        endo(100, 410 , 410 , 410 , 410 , 0)
+        endo(100, 350 , 350 , 350 , 350 , 0)
 
         power_expand_board.set_power("DC5",-100)
         time.sleep(0.5)
         power_expand_board.set_power("DC5",0)
         power_expand_board.set_power("DC1",100)
-        time.sleep(0.5)
+        time.sleep(0.48)
         power_expand_board.set_power("DC1",0)
 
-        
-        endo(120, -400 , -400 , -400 , -400 , 0)
-
-        power_expand_board.set_power("DC1",-100)
-        time.sleep(0.8)
-        power_expand_board.set_power("DC1",0)
-
-        endo(120, 850 , -850 , 850 , -850 , 0)
-        
+        endo(120, -270 , -270 , -270 , -270 , 0)
+        endo(120, 800 , -800 , 800 , -800 , 0)
+        endo(120, 900 , 900 , 900 , 900 , 0)
 
         power_expand_board.set_power("DC5",100)
-        encoder_motor_M1.set_power(50)
-        encoder_motor_M2.set_power(-50)
-        encoder_motor_M3.set_power(50) 
-        encoder_motor_M4.set_power(-50)
-
-        time.sleep(0.3)
-        
+        time.sleep(0.5)
         power_expand_board.set_power("DC5",0)
-        encoder_motor_M1.set_power(20)
-        encoder_motor_M2.set_power(-20)
-        encoder_motor_M3.set_power(20) 
-        encoder_motor_M4.set_power(-20)
-
-        time.sleep(2)
-
-        encoder_motor_M1.set_power(0)
-        encoder_motor_M2.set_power(0)
-        encoder_motor_M3.set_power(0) 
-        encoder_motor_M4.set_power(0)
-
-        endo(150, 200 , 200 , 200 , 200 , 0)
-
-        endo(120, -850 , 850 , -850 , 850 , 0)
-
-        endo(120, 850 , -850 , -850 , 850 , 0)
-
-        endo(120, -850 , 850 , 850 , -850 , 0)
-
 
     #ขวา
     else:
@@ -303,7 +272,7 @@ def autonomous():
         encoder_motor_M4.set_power(-20)
 
 
-        time.sleep(1.08)
+        time.sleep(0.9)
 
         encoder_motor_M1.set_power(25)
         encoder_motor_M2.set_power(-25)
@@ -312,7 +281,7 @@ def autonomous():
         power_expand_board.set_power("DC5" , 100)
         power_expand_board.set_power("DC1",100)
 
-        time.sleep(0.96)
+        time.sleep(1.1)
 
         encoder_motor_M1.set_power(0)
         encoder_motor_M2.set_power(0)
@@ -335,46 +304,21 @@ def autonomous():
         time.sleep(0.5)
         power_expand_board.set_power("DC5",0)
         power_expand_board.set_power("DC1",100)
-        time.sleep(0.5)
+        time.sleep(0.48)
         power_expand_board.set_power("DC1",0)
 
-        endo(120, -400 , -400 , -400 , -400 , 0)
-
-        power_expand_board.set_power("DC1",-100)
-        time.sleep(0.8)
-        power_expand_board.set_power("DC1",0)
-
-        endo(120, -850 , 850 , -850 , 850 , 0)
-       
+        endo(120, -220 , -220 , -220 , -220 , 0)
+        endo(120, -800 , 800 , -800 , 800 , 0)
+        endo(120, 900 , 900 , 900 , 900 , 0)
 
         power_expand_board.set_power("DC5",100)
-        encoder_motor_M1.set_power(50)
-        encoder_motor_M2.set_power(-50)
-        encoder_motor_M3.set_power(50) 
-        encoder_motor_M4.set_power(-50)
-
-        time.sleep(0.3)
-        
+        time.sleep(0.5)
         power_expand_board.set_power("DC5",0)
-        encoder_motor_M1.set_power(20)
-        encoder_motor_M2.set_power(-20)
-        encoder_motor_M3.set_power(20) 
-        encoder_motor_M4.set_power(-20)
 
-        time.sleep(2)
 
-        encoder_motor_M1.set_power(0)
-        encoder_motor_M2.set_power(0)
-        encoder_motor_M3.set_power(0) 
-        encoder_motor_M4.set_power(0)
+       
 
-        endo(150, 200 , 200 , 200 , 200 , 0)
-
-        endo(120, 850 , -850 , 850 , -850 , 0)
-
-        endo(120, -850 , 850 , 850 , -850 , 0)
-
-        endo(120, 850 , -850 , -850 , 850 , 0)
+        
 
         
 
