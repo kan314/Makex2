@@ -8,7 +8,7 @@ from mbuild.ranging_sensor import ranging_sensor_class
 import math
 import time
 
-global speedlimit , check_spin , check_limit , spin ,is_reverse ,check_reverse
+global speedlimit , check_spin , check_limit , spin ,is_reverse ,check_reverse , f_spin
 speedlimit = 0.4
 check_limit = False
 check_spin = False
@@ -19,6 +19,7 @@ left_con = False
 auto = False
 count = 0
 move_count = 0
+f_spin = True
 
 def movement(speedlimit):
     x_joyleft = float(gamepad.get_joystick("Lx"))
@@ -67,7 +68,7 @@ def movement(speedlimit):
 
 def control():
 
-    global speedlimit , check_spin , check_limit , spin , is_reverse , check_reverse , left_con
+    global speedlimit , check_spin , check_limit , spin , is_reverse , check_reverse , left_con ,f_spin
     
     if gamepad.is_key_pressed("R1") and speedlimit < 1 and check_limit == False:
         speedlimit += 0.2
@@ -118,28 +119,31 @@ def control():
         power_expand_board.set_power("BL1",100)
         power_expand_board.set_power("BL2",100)
         power_expand_board.set_power("DC8",20)
+        f_spin = False
     elif gamepad.is_key_pressed("L2") :
         power_expand_board.set_power("BL1",60)
         power_expand_board.set_power("BL2",60)
         power_expand_board.set_power("DC8",20)
+        f_spin = False
     else:
         power_expand_board.stop("BL1")
         power_expand_board.stop("BL2")
         power_expand_board.set_power("DC8",0)
+        f_spin = True
 
     
 
     if spin == True and gamepad.is_key_pressed("≡") == False:
         power_expand_board.set_power("DC2",-100)
         power_expand_board.set_power("DC3",-60)
-        power_expand_board.set_power("DC4",-100)
+        if f_spin == True:
+            power_expand_board.set_power("DC4",-100)
     elif spin == True and gamepad.is_key_pressed("≡") == True:
         power_expand_board.set_power("DC2",80)
         power_expand_board.set_power("DC3",80)
         power_expand_board.set_power("DC4",100)
         
     else:
-        power_expand_board.stop("DC1")
         power_expand_board.stop("DC2")
         power_expand_board.stop("DC3")
         power_expand_board.stop("DC4")
@@ -151,9 +155,9 @@ def control():
             smartservo_1.move(-7,100)
     else:
         if gamepad.is_key_pressed("N4"):
-            smartservo_1.move_to(160,80)
+            smartservo_1.move_to(180,80)
         if gamepad.is_key_pressed("N3"):
-            smartservo_1.move_to(115,80)
+            smartservo_1.move_to(120,80)
 
     if gamepad.is_key_pressed("N2") and check_reverse == False and gamepad.is_key_pressed("≡") == True:
         is_reverse = not is_reverse
@@ -163,7 +167,7 @@ def control():
 
 
         power_expand_board.set_power("DC6",100)
-        time.sleep(0.4)
+        time.sleep(0.37)
         power_expand_board.set_power("DC6",-100)
         time.sleep(0.55)
         power_expand_board.set_power("DC6",0)
@@ -177,7 +181,7 @@ def endo (speed , m1 ,m2 ,m3,m4 ,intake):
 
     if intake == 1 :
         power_expand_board.set_power("DC2",-100)
-        power_expand_board.set_power("DC3",-90)
+        power_expand_board.set_power("DC3",-60)
         power_expand_board.set_power("DC4",-100)
     else:
         power_expand_board.set_power("DC2",0)
@@ -197,8 +201,31 @@ def endo (speed , m1 ,m2 ,m3,m4 ,intake):
             count = 0
             break
         
+def endo_re (speed , m1 ,m2 ,m3,m4 ,intake):
+    global count
 
-def autonomous():
+    if intake == 1 :
+        power_expand_board.set_power("DC2",-100)
+        power_expand_board.set_power("DC3",-60)
+        power_expand_board.set_power("DC4",-100)
+    else:
+        power_expand_board.set_power("DC2",0)
+        power_expand_board.set_power("DC3",0)
+        power_expand_board.set_power("DC4",0)
+
+    encoder_motor_M1.move(m4 , speed)
+    encoder_motor_M2.move(m3 * -1, speed)
+    encoder_motor_M3.move(m2 , speed) 
+    encoder_motor_M4.move(m1 * -1, speed)
+
+
+    while True:
+        if encoder_motor_M1.get_value("speed") != 0 or encoder_motor_M2.get_value("speed") != 0 or encoder_motor_M3.get_value("speed") != 0 or encoder_motor_M4.get_value("speed") != 0 or count <= 20:
+            count += 1
+        else:
+            count = 0
+            break
+def autonomous_Block():
     #ซ้าย
     if  distance_sensor_1.get_distance() >= 10:
         time.sleep(0.01)
@@ -223,7 +250,7 @@ def autonomous():
         power_expand_board.set_power("DC5" , 100)
         power_expand_board.set_power("DC1",100)
 
-        time.sleep(1.1)
+        time.sleep(1)
 
         encoder_motor_M1.set_power(0)
         encoder_motor_M2.set_power(0)
@@ -246,16 +273,22 @@ def autonomous():
         time.sleep(0.5)
         power_expand_board.set_power("DC5",0)
         power_expand_board.set_power("DC1",100)
-        time.sleep(0.48)
+        time.sleep(0.37)
         power_expand_board.set_power("DC1",0)
 
         endo(120, -270 , -270 , -270 , -270 , 0)
-        endo(120, 800 , -800 , 800 , -800 , 0)
+        endo(120, 820 , -820 , 820 , -820 , 0)
         endo(120, 900 , 900 , 900 , 900 , 0)
 
         power_expand_board.set_power("DC5",100)
         time.sleep(0.5)
         power_expand_board.set_power("DC5",0)
+
+        endo(120, -200 , -200 , -200 , -200 , 0)
+        endo(120, -820 , 820 , -820 , 820 , 1)
+        for i in range(3):
+            endo(300, -400 , -400 , -400 , -400 , 1)
+            endo(300, 200 , 200 , 200 , 200 , 1)
 
     #ขวา
     else:
@@ -272,7 +305,7 @@ def autonomous():
         encoder_motor_M4.set_power(-20)
 
 
-        time.sleep(0.9)
+        time.sleep(1)
 
         encoder_motor_M1.set_power(25)
         encoder_motor_M2.set_power(-25)
@@ -281,7 +314,7 @@ def autonomous():
         power_expand_board.set_power("DC5" , 100)
         power_expand_board.set_power("DC1",100)
 
-        time.sleep(1.1)
+        time.sleep(1.0)
 
         encoder_motor_M1.set_power(0)
         encoder_motor_M2.set_power(0)
@@ -296,26 +329,137 @@ def autonomous():
 
 
 
-        endo(90, 840 , -840 , 840 , -840 , 0)
+        endo(90, 850 , -850 , 850 , -850 , 0)
 
-        endo(100, 250 , 250 , 250 , 250 , 0)
+        endo(100, 280 , 280 , 280 , 280 , 0)
 
         power_expand_board.set_power("DC5",-100)
-        time.sleep(0.5)
+        time.sleep(0.8)
         power_expand_board.set_power("DC5",0)
         power_expand_board.set_power("DC1",100)
-        time.sleep(0.48)
+        time.sleep(0.37)
         power_expand_board.set_power("DC1",0)
 
         endo(120, -220 , -220 , -220 , -220 , 0)
-        endo(120, -800 , 800 , -800 , 800 , 0)
+        endo(120, -820 , 820 , -820 , 820 , 0)
         endo(120, 900 , 900 , 900 , 900 , 0)
 
         power_expand_board.set_power("DC5",100)
         time.sleep(0.5)
         power_expand_board.set_power("DC5",0)
 
+        endo(120, -200 , -200 , -200 , -200 , 0)
+        endo(120, 820 , -820 , 820 , -820 , 1)
+        for i in range(3):
+            endo(300, -400 , -400 , -400 , -400 , 1)
+            endo(300, 200 , 200 , 200 , 200 , 1)
 
+
+
+def autonomous_Slicon():
+    #ซ้าย
+    if  distance_sensor_1.get_distance() <= 30:
+        time.sleep(0.01)
+        endo_re(200, 300 ,-300 , -300 , 300 , 1)
+        endo_re(300, 1100 , 1100 , 1100 , 1100 , 0)
+        endo_re(150, -830 ,830 , -830 , 830 , 0)
+        endo_re(150, 1100 ,1100 , 1100 , 1100 , 1)
+        endo_re(300, -200 , -200 , -200 , -200 , 1)
+        endo_re(300, 200 , 200 , 200 , 200 , 1)
+        for i in range(2):
+            endo_re(300, 400 , 400 , 400 , 400 , 1)
+            endo_re(300, -200 , -200 , -200 , -200 , 1)
+
+        endo_re(200, 300 ,-300 , -300 , 300 , 1)
+        endo_re(300, 100 , 100 , 100 , 100 , 1)
+        power_expand_board.set_power("BL1",100)
+        power_expand_board.set_power("BL2",100)
+
+        endo_re(200, -280 ,280 , -280 , 280 , 1)
+        smartservo_1.move_to(180,80)
+
+
+
+        power_expand_board.set_power("DC6",100)
+        time.sleep(0.37)
+        power_expand_board.set_power("DC6",-100)
+        time.sleep(0.55)
+        power_expand_board.set_power("DC6",0)
+
+        time.sleep(1.25)
+
+        endo_re(200, 250 ,-250 , 250 , -250 , 1)
+
+        power_expand_board.set_power("DC6",100)
+        time.sleep(0.37)
+        power_expand_board.set_power("DC6",-100)
+        time.sleep(0.55)
+        power_expand_board.set_power("DC6",0)
+
+        time.sleep(1.25)
+        endo_re(200, 250 ,-250 , 250 , -250 , 1)
+
+        power_expand_board.set_power("DC6",100)
+        time.sleep(0.4)
+        power_expand_board.set_power("DC6",-100)
+        time.sleep(0.55)
+        power_expand_board.set_power("DC6",0)
+
+        time.sleep(1.25)
+        power_expand_board.stop("BL1")
+        power_expand_board.stop("BL2")
+    else:
+        time.sleep(0.01)
+        
+        endo_re(200, -300 ,300 , 300 , -300 , 1)
+        endo_re(300, 1100 , 1100 , 1100 , 1100 , 0)
+        endo_re(150, 840 ,-840 , 840 , -840 , 0)
+        endo_re(150, 1100 ,1100 , 1100 , 1100 , 1)
+        endo_re(300, -200 , -200 , -200 , -200 , 1)
+        endo_re(300, 200 , 200 , 200 , 200 , 1)
+        for i in range(2):
+            endo_re(300, 400 , 400 , 400 , 400 , 1)
+            endo_re(300, -200 , -200 , -200 , -200 , 1)
+
+        endo_re(200, -300 ,300 , 300 , -300 , 1)
+        endo_re(300, 100 , 100 , 100 , 100 , 1)
+        power_expand_board.set_power("BL1",100)
+        power_expand_board.set_power("BL2",100)
+
+        endo_re(200, 300 ,-300 , 300 , -300 , 1)
+        smartservo_1.move_to(180,80)
+
+
+
+        power_expand_board.set_power("DC6",100)
+        time.sleep(0.37)
+        power_expand_board.set_power("DC6",-100)
+        time.sleep(0.55)
+        power_expand_board.set_power("DC6",0)
+
+        time.sleep(1.25)
+
+        endo_re(200, -250 ,250 , -250 , 250 , 1)
+
+        power_expand_board.set_power("DC6",100)
+        time.sleep(0.37)
+        power_expand_board.set_power("DC6",-100)
+        time.sleep(0.55)
+        power_expand_board.set_power("DC6",0)
+
+        time.sleep(1.25)
+        endo_re(200, -250 ,250 , -250 , 250 , 1)
+
+        power_expand_board.set_power("DC6",100)
+        time.sleep(0.4)
+        power_expand_board.set_power("DC6",-100)
+        time.sleep(0.55)
+        power_expand_board.set_power("DC6",0)
+
+        time.sleep(1.25)
+        power_expand_board.stop("BL1")
+        power_expand_board.stop("BL2")
+        
        
 
         
@@ -339,14 +483,15 @@ distance_sensor_1 = ranging_sensor_class("PORT3", "INDEX1")
 
 
 while True:
-    if gamepad.is_key_pressed("+") and count == 0:
-        auto = True
-        count = 1
+    if count == 0:
+        if gamepad.is_key_pressed("+") or power_manage_module.is_auto_mode() :
+            auto = True
+            count = 1
     elif gamepad.is_key_pressed("R2") and  gamepad.is_key_pressed("≡") :
         count = 0
 
-    if power_manage_module.is_auto_mode() or  auto == True:
-        autonomous()
+    if auto == True:
+        autonomous_Slicon()
         auto = False
     else:
         movement(speedlimit)
