@@ -17,7 +17,7 @@ is_reverse = False
 check_reverse = False
 left_con = False
 auto = False
-count = 0
+count = False
 move_count = 0
 f_spin = True
 
@@ -151,7 +151,7 @@ def control():
     if gamepad.is_key_pressed("≡"):
         if gamepad.is_key_pressed("N4"):
             smartservo_1.move(7,100)
-        if gamepad.is_key_pressed("N3"):a
+        if gamepad.is_key_pressed("N3"):
             smartservo_1.move(-7,100)
     else:
         if gamepad.is_key_pressed("N4"):
@@ -483,12 +483,12 @@ distance_sensor_1 = ranging_sensor_class("PORT3", "INDEX1")
 
 
 while True:
-    if count == 0:
+    if count == False:
         if gamepad.is_key_pressed("+") or power_manage_module.is_auto_mode() :
             auto = True
-            count = 1
+            count = True
     elif gamepad.is_key_pressed("R2") and  gamepad.is_key_pressed("≡") :
-        count = 0
+        count = False
 
     if auto == True:
         autonomous_Slicon()
