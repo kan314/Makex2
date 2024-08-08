@@ -151,7 +151,7 @@ def control():
     if gamepad.is_key_pressed("≡"):
         if gamepad.is_key_pressed("N4"):
             smartservo_1.move(7,100)
-        if gamepad.is_key_pressed("N3"):
+        if gamepad.is_key_pressed("N3"):a
             smartservo_1.move(-7,100)
     else:
         if gamepad.is_key_pressed("N4"):
@@ -366,12 +366,12 @@ def autonomous_Slicon():
         endo_re(150, 1100 ,1100 , 1100 , 1100 , 1)
         endo_re(300, -200 , -200 , -200 , -200 , 1)
         endo_re(300, 200 , 200 , 200 , 200 , 1)
-        for i in range(2):
+        for i in range(1):
             endo_re(300, 400 , 400 , 400 , 400 , 1)
             endo_re(300, -200 , -200 , -200 , -200 , 1)
 
         endo_re(200, 300 ,-300 , -300 , 300 , 1)
-        endo_re(300, 100 , 100 , 100 , 100 , 1)
+        endo_re(300, 300 , 300 , 300 , 300 , 1)
         power_expand_board.set_power("BL1",100)
         power_expand_board.set_power("BL2",100)
 
@@ -417,12 +417,12 @@ def autonomous_Slicon():
         endo_re(150, 1100 ,1100 , 1100 , 1100 , 1)
         endo_re(300, -200 , -200 , -200 , -200 , 1)
         endo_re(300, 200 , 200 , 200 , 200 , 1)
-        for i in range(2):
+        for i in range(1):
             endo_re(300, 400 , 400 , 400 , 400 , 1)
             endo_re(300, -200 , -200 , -200 , -200 , 1)
 
         endo_re(200, -300 ,300 , 300 , -300 , 1)
-        endo_re(300, 100 , 100 , 100 , 100 , 1)
+        endo_re(300, 300 , 300 , 300 , 300 , 1)
         power_expand_board.set_power("BL1",100)
         power_expand_board.set_power("BL2",100)
 
